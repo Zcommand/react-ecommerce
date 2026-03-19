@@ -3,26 +3,27 @@ import { Link } from "react-router-dom";
 const Header = () => {
   return (
     <header className="header-hero text-white position-relative overflow-hidden">
-      <div className="container text-center py-5 position-relative">
+      <div className="container text-center py-4 py-md-5 position-relative">
 
         {/* Floating glow circles */}
         <div className="glow glow-1"></div>
         <div className="glow glow-2"></div>
 
         {/* Badge */}
-        <span className="badge bg-warning text-dark mb-3 px-4 py-2 fs-6 shadow">
+        <span className="badge bg-warning text-dark mb-3 px-3 px-md-4 py-2 fs-6 shadow">
           🏮 Limited Time Offer
         </span>
 
         {/* Title */}
-        <h1 className="fw-bold display-5 mt-2 mb-3 animate-title">
+        <h1 className="fw-bold mt-2 mb-3 animate-title fs-3 fs-md-1">
           🧧 Chinese New Year Sale 🧧
         </h1>
 
         {/* Subtitle */}
-        <p className="lead mb-3">
+        <p className="mb-3 px-2 px-md-0 fs-6 fs-md-5">
           Enjoy up to{" "}
-          <span className="fw-bold text-warning fs-4">25% OFF</span> on selected items
+          <span className="fw-bold text-warning fs-5 fs-md-4">25% OFF</span>{" "}
+          on selected items
         </p>
 
         {/* CTA */}
@@ -36,7 +37,7 @@ const Header = () => {
         </div>
 
         {/* Footer */}
-        <small className="d-block mt-3 opacity-75">
+        <small className="d-block mt-3 opacity-75 px-2 px-md-0">
           Promo valid until <strong>January 20, 2027</strong>
         </small>
 
