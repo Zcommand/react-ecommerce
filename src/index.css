@@ -1,0 +1,198 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+/* Product image zoom on hover */
+.product-img-wrapper {
+  overflow: hidden;
+  position: relative;
+}
+
+.product-img {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+/* zoom effect like Shopee/Lazada */
+.product-img-wrapper:hover .product-img {
+  transform: scale(1.1);
+}
+
+/* sale badge */
+.sale-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: red;
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+/* Apply only on mobile and tablets (below lg breakpoint) */
+@media (max-width: 991.98px) {
+  body {
+    padding-bottom: 70px;
+  }
+}
+
+/* Default (Desktop) */
+.store-title {
+  font-size: 2.5em;
+  font-weight: bold;
+}
+
+.store-subtitle {
+  font-size: 1.2rem;
+}
+
+/* Mobile View */
+@media (max-width: 991.98px) {
+  .store-title {
+    font-size: 1.5rem;
+  }
+  .store-subtitle {
+    font-size: 0.9rem;
+  }
+}
+
+.fade-in{
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Background gradient */
+.header-hero {
+  background: linear-gradient(135deg, #8B0000, #B22222, #FF0000);
+}
+
+/* Floating glow effect */
+.glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: float 6s ease-in-out infinite;
+}
+
+.glow-1 {
+  width: 200px;
+  height: 200px;
+  background: gold;
+  top: -50px;
+  left: -50px;
+}
+
+.glow-2 {
+  width: 250px;
+  height: 250px;
+  background: orange;
+  bottom: -80px;
+  right: -80px;
+  animation-delay: 2s;
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* Title animation */
+.animate-title {
+  animation: fadeSlide 1s ease forwards;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button hover */
+.btn-hover:hover {
+  transform: scale(1.05);
+  transition: 0.2s ease;
+}
