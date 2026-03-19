@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <footer className="bg-dark text-white pt-4 mt-5">
@@ -16,33 +18,24 @@ const Footer = () => {
             <h6 className="fw-bold">Quick Links</h6>
             <ul className="list-unstyled">
               <li>
-                <a href="/" className="text-secondary text-decoration-none">
+                <Link to="/" className="text-secondary text-decoration-none">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/products"
-                  className="text-secondary text-decoration-none"
-                >
+                <Link to="/products" className="text-secondary text-decoration-none">
                   Products
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/contact"
-                  className="text-secondary text-decoration-none"
-                >
+                <Link to="/contact" className="text-secondary text-decoration-none">
                   Contact
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/policies"
-                  className="text-secondary text-decoration-none"
-                >
+                <Link to="/policies" className="text-secondary text-decoration-none">
                   Policies
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -61,7 +54,6 @@ const Footer = () => {
 
         <hr className="border-secondary" />
 
-        {/* baba */}
         <div className="text-center pb-3">
           <p className="mb-0 small text-secondary">
             &copy; 2026 My E-commerce Site. All rights reserved.
