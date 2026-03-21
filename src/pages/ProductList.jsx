@@ -3,6 +3,9 @@ import ProductCard from "../components/ProductCard";
 import Sidebar from "../components/Sidebar";
 import { CartContext } from "../context/CartContext";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -12,13 +15,14 @@ const ProductList = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortOption, setSortOption] = useState("");
 
-  const { recentlyViewed = [] } = useContext(CartContext); 
+  const { recentlyViewed = [] } = useContext(CartContext);
 
   useEffect(() => {
     fetch("https://react-ecommerce-backend-paeo.onrender.com/api/products")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data || []);
+
         const uniqueCategories = new Set();
         data?.forEach((p) => {
           if (Array.isArray(p.category)) {
@@ -27,6 +31,7 @@ const ProductList = () => {
             uniqueCategories.add(p.category);
           }
         });
+
         setCategories(["All", ...Array.from(uniqueCategories)]);
         setLoading(false);
       })
@@ -47,7 +52,7 @@ const ProductList = () => {
         selectedCategory === "All" ||
         (Array.isArray(p.category)
           ? p.category.includes(selectedCategory)
-          : p.category === selectedCategory),
+          : p.category === selectedCategory)
     )
     .sort((a, b) => {
       if (sortOption === "priceLow") return a.price - b.price;
@@ -56,26 +61,10 @@ const ProductList = () => {
       return 0;
     });
 
-  if (loading) {
-    return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: "50vh" }}
-      >
-        <div
-          className="spinner-border text-danger"
-          role="status"
-          style={{ width: "3rem", height: "3rem" }}
-        >
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="container mt-3">
       <div className="row">
+        {/* Sidebar */}
         <div className="col-lg-2 col-md-3 mb-4">
           <Sidebar
             onCategorySelect={handleCategorySelect}
@@ -83,9 +72,12 @@ const ProductList = () => {
             products={products}
           />
         </div>
+
+        {/* Main Content */}
         <div className="col-lg-10 col-md-9">
           <h2 className="mb-3 text-danger">Products</h2>
 
+          {/* Search */}
           <input
             type="text"
             className="form-control mb-3"
@@ -94,6 +86,7 @@ const ProductList = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
 
+          {/* Sort */}
           <select
             className="form-select mb-3"
             value={sortOption}
@@ -105,19 +98,37 @@ const ProductList = () => {
             <option value="name">Name (A-Z)</option>
           </select>
 
+          {/* Products Grid */}
           <div className="row">
-            {processedProducts.length > 0 ? (
-              processedProducts.map((product) => (
-                <div
-                  className="col-lg-3 col-md-4 col-sm-6 mb-4"
-                  key={product.id}
-                >
-                  <ProductCard product={product} />
-                </div>
-              ))
-            ) : (
-              <h5 className="text-center">No products found.</h5>
-            )}
+            {loading
+              ? Array(8)
+                  .fill(0)
+                  .map((_, i) => (
+                    <div
+                      className="col-lg-3 col-md-4 col-sm-6 mb-4"
+                      key={i}
+                    >
+                      <div className="card p-3">
+                        <Skeleton height={180} />
+                        <div className="mt-2">
+                          <Skeleton height={20} />
+                          <Skeleton height={15} width="60%" />
+                        </div>
+                      </div>
+                    </div>
+                  ))
+              : processedProducts.length > 0 ? (
+                  processedProducts.map((product) => (
+                    <div
+                      className="col-lg-3 col-md-4 col-sm-6 mb-4"
+                      key={product.id}
+                    >
+                      <ProductCard product={product} />
+                    </div>
+                  ))
+                ) : (
+                  <h5 className="text-center">No products found.</h5>
+                )}
           </div>
 
           {/* Recently Viewed Products */}
@@ -125,11 +136,6 @@ const ProductList = () => {
             <div className="mt-5 position-relative">
               <h4 className="mb-3 text-danger">Recently Viewed</h4>
 
-
-
-
-
-              {/* Scrollable container */}
               <div
                 id="recentlyViewedContainer"
                 className="d-flex overflow-auto pb-2"
