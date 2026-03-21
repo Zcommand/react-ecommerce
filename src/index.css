@@ -188,13 +188,11 @@ body.dark-mode {
   color: #ffffff;
 }
 
-/* Cards */
 body.dark-mode .card {
   background-color: #1e1e1e;
   color: #ffffff;
 }
 
-/* Navbar (desktop + mobile) */
 body.dark-mode .navbar {
   background-color: #1e1e1e !important;
 }
@@ -210,12 +208,10 @@ body.dark-mode .navbar.fixed-bottom button {
   color: #ffffff !important;
 }
 
-/* Nav links */
 body.dark-mode .nav-link {
   color: #ffffff !important;
 }
 
-/* Dropdown */
 body.dark-mode .dropdown-menu {
   background-color: #2a2a2a;
 }
@@ -224,7 +220,6 @@ body.dark-mode .dropdown-item {
   color: #ffffff !important;
 }
 
-/* Sidebar / Offcanvas */
 body.dark-mode .sidebar,
 body.dark-mode .offcanvas,
 body.dark-mode .bg-light {
@@ -242,7 +237,6 @@ body.dark-mode .offcanvas .nav-link:hover {
   background-color: #333;
 }
 
-/* List group sidebar */
 body.dark-mode .list-group {
   background-color: #1e1e1e !important;
   border: none;
@@ -272,7 +266,6 @@ body.dark-mode .badge.text-bg-danger {
   color: #ffffff !important;
 }
 
-/* Forms / Sort dropdown */
 body.dark-mode select,
 body.dark-mode .form-select {
   background-color: #2a2a2a !important;
@@ -285,7 +278,6 @@ body.dark-mode option {
   color: #ffffff;
 }
 
-/* Tables (Compare page fix) */
 body.dark-mode .table {
   background-color: #1e1e1e !important;
   color: #ffffff !important;
@@ -298,13 +290,6 @@ body.dark-mode .table td {
   border-color: #333 !important;
 }
 
-body.dark-mode .table-danger,
-body.dark-mode .table-danger th {
-  background-color: #2a2a2a !important;
-  color: #ffffff !important;
-}
-
-/* Modal / Popup */
 body.dark-mode .modal-content {
   background-color: #1e1e1e !important;
   color: #ffffff !important;
@@ -331,15 +316,43 @@ body.dark-mode .modal .form-control {
   border: 1px solid #444 !important;
 }
 
-/* Container text consistency */
-body.dark-mode .container,
-body.dark-mode .container-fluid {
-  color: #ffffff;
+/* ===================== */
+/* RECEIPT DARK MODE FIX */
+/* ===================== */
+
+body.dark-mode .receipt {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+body.dark-mode .receipt * {
+  color: #000000 !important;
+}
+
+body.dark-mode .receipt .text-white,
+body.dark-mode .receipt .text-light,
+body.dark-mode .receipt .text-muted {
+  color: #000000 !important;
+}
+
+body.dark-mode .receipt h1,
+body.dark-mode .receipt h2,
+body.dark-mode .receipt h3,
+body.dark-mode .receipt h4,
+body.dark-mode .receipt h5,
+body.dark-mode .receipt h6,
+body.dark-mode .receipt strong {
+  color: #000000 !important;
+}
+
+body.dark-mode .receipt hr {
+  border-top: 1px dashed #000000 !important;
 }
 
 /* ===================== */
 /* PRINT FIX (RECEIPT) */
 /* ===================== */
+
 @media print {
   html, body {
     height: auto !important;
@@ -347,45 +360,67 @@ body.dark-mode .container-fluid {
     background: white !important;
   }
 
-  /* Hide everything except receipt */
   body * {
     visibility: hidden !important;
   }
 
-  /* Show receipt */
   .receipt,
   .receipt * {
     visibility: visible !important;
   }
 
-  /* Force receipt layout */
   .receipt {
-    position: fixed !important;
-    left: 0;
+    position: absolute !important;
+    left: 50%;
     top: 0;
+    transform: translateX(-50%);
     width: 100% !important;
     max-width: 400px;
-    margin: 0 auto !important;
     padding: 16px !important;
+    margin: 0 !important;
     box-shadow: none !important;
-    background: white !important;
+    background: #ffffff !important;
+    color: #000000 !important;
   }
 
-  /* Remove bootstrap spacing issues */
   .container {
     width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
   }
 
-  /* Hide non-print elements */
   .no-print {
     display: none !important;
   }
 
-  /* Avoid page breaks inside receipt */
   .receipt {
     page-break-inside: avoid;
     break-inside: avoid;
   }
+
+  .receipt * {
+    color: #000000 !important;
+  }
+}
+
+/* ===================== */
+/* PRINT BUTTON */
+/* ===================== */
+
+.print-btn {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #000 !important;
+  font-weight: 600;
+}
+
+.print-btn:hover {
+  background-color: #f1f1f1 !important;
+}
+
+
+body.dark-mode .print-btn {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #050404 !important;
 }

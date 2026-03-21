@@ -8,7 +8,7 @@ export const CartProvider = ({ children }) => {
   const [compareList, setCompareList] = useState([]);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
 
-  // ✅ NEW: Theme state
+
   const [theme, setTheme] = useState("light");
 
   const toggleTheme = () => {
@@ -90,7 +90,7 @@ export const CartProvider = ({ children }) => {
         compareList,
         recentlyViewed,
 
-        // ✅ theme values
+        
         theme,
         toggleTheme,
 

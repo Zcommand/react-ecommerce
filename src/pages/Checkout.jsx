@@ -16,8 +16,6 @@ const Checkout = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [finalTotal, setFinalTotal] = useState(0);
-
-  // ✅ store snapshot of cart for receipt
   const [receiptItems, setReceiptItems] = useState([]);
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -45,29 +43,37 @@ const Checkout = () => {
     setSubmitted(true);
   };
 
-  // ✅ BUY MORE handler (redirect to products)
   const handleBuyMore = () => {
     navigate("/products");
+  };
+
+  const handlePrint = () => {
+    window.focus();
+    window.print();
   };
 
   const formatPrice = (value) =>
     value.toLocaleString("en-PH", { minimumFractionDigits: 2 });
 
-  // ✅ Auto print AFTER receipt renders fully
+  // ✅ Improved auto-print for mobile
   useEffect(() => {
     if (submitted) {
       setTimeout(() => {
+        window.focus();
         window.print();
-      }, 300);
+      }, 500);
     }
   }, [submitted]);
 
   // ================= RECEIPT VIEW =================
   if (submitted) {
+    const receiptSubtotal = finalTotal / 1.12;
+    const receiptTax = finalTotal - receiptSubtotal;
+
     return (
-      <div className="container my-5 d-flex justify-content-center receipt">
+      <div className="container my-5 d-flex justify-content-center">
         <div
-          className="bg-white p-4 shadow"
+          className="receipt bg-white p-4 shadow"
           style={{
             maxWidth: "400px",
             width: "100%",
@@ -108,14 +114,14 @@ const Checkout = () => {
 
           <hr style={{ borderTop: "1px dashed black" }} />
 
-          {/* TOTAL */}
+          {/* TOTALS */}
           <div className="d-flex justify-content-between">
             <span>Subtotal</span>
-            <span>₱{formatPrice(finalTotal / 1.12)}</span>
+            <span>₱{formatPrice(receiptSubtotal)}</span>
           </div>
           <div className="d-flex justify-content-between">
             <span>VAT (12%)</span>
-            <span>₱{formatPrice(finalTotal - finalTotal / 1.12)}</span>
+            <span>₱{formatPrice(receiptTax)}</span>
           </div>
 
           <hr />
@@ -131,17 +137,13 @@ const Checkout = () => {
             <small>Thank you for your purchase!</small>
           </div>
 
-          {/* PRINT BUTTON */}
+          {/* ACTION BUTTONS */}
           <div className="text-center mt-3 no-print">
-            <button
-              className="btn btn-dark btn-sm"
-              onClick={() => window.print()}
-            >
+            <button className="print-btn no-print" onClick={handlePrint}>
               Print Receipt
             </button>
           </div>
 
-          {/* BUY MORE BUTTON */}
           <div className="text-center mt-2 no-print">
             <button
               className="btn btn-outline-danger btn-sm"
@@ -150,6 +152,10 @@ const Checkout = () => {
               Buy More
             </button>
           </div>
+
+          <small className="text-muted d-block mt-2 text-center no-print">
+            If print doesn’t open automatically, tap “Print Receipt”.
+          </small>
         </div>
       </div>
     );
@@ -165,10 +171,13 @@ const Checkout = () => {
         <div className="col-lg-6">
           <div className="card shadow-sm p-4">
             <h4 className="mb-4 fw-bold">Customer Information</h4>
+
             <form onSubmit={handleSubmit}>
               {["name", "email", "address", "phone"].map((field) => (
                 <div className="mb-3" key={field}>
-                  <label className="form-label text-capitalize">{field}</label>
+                  <label className="form-label text-capitalize">
+                    {field}
+                  </label>
                   <input
                     type={field === "email" ? "email" : "text"}
                     name={field}
@@ -207,7 +216,9 @@ const Checkout = () => {
 
             {cart.map((item) => (
               <div key={item.id} className="d-flex justify-content-between mb-2">
-                <span>{item.name} x {item.qty}</span>
+                <span>
+                  {item.name} x {item.qty}
+                </span>
                 <span>₱{formatPrice(item.price * item.qty)}</span>
               </div>
             ))}
@@ -218,6 +229,7 @@ const Checkout = () => {
               <span>Subtotal</span>
               <span>₱{formatPrice(subtotal)}</span>
             </div>
+
             <div className="d-flex justify-content-between">
               <span>VAT (12%)</span>
               <span>₱{formatPrice(tax)}</span>
