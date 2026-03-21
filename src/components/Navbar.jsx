@@ -141,33 +141,20 @@ const Navbar = () => {
       <nav className="navbar fixed-bottom bg-light border-top shadow-lg d-lg-none" style={{ zIndex: 1030 }}>
         <div className="d-flex justify-content-around align-items-center w-100 text-center">
 
-          {/* Home */}
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `flex-fill text-decoration-none ${isActive ? "text-primary" : "text-body"}`
-            }
-          >
+          <NavLink to="/" className={({ isActive }) => `flex-fill text-decoration-none ${isActive ? "text-primary" : "text-body"}`}>
             <div className="d-flex flex-column align-items-center py-1">
               <i className="fa fa-home fs-5"></i>
               <small>Home</small>
             </div>
           </NavLink>
 
-          {/* Products */}
-          <NavLink
-            to="/products"
-            className={({ isActive }) =>
-              `flex-fill text-decoration-none ${isActive ? "text-primary" : "text-body"}`
-            }
-          >
+          <NavLink to="/products" className={({ isActive }) => `flex-fill text-decoration-none ${isActive ? "text-primary" : "text-body"}`}>
             <div className="d-flex flex-column align-items-center py-1">
               <i className="fa fa-box fs-5"></i>
               <small>Products</small>
             </div>
           </NavLink>
 
-          {/* More */}
           <button
             className="flex-fill btn p-0 border-0 bg-transparent text-body"
             onClick={() => setMobileMoreOpen(true)}
@@ -178,7 +165,6 @@ const Navbar = () => {
             </div>
           </button>
 
-          {/* Theme */}
           <button
             className="flex-fill btn p-0 border-0 bg-transparent text-body"
             onClick={() => setDarkMode(!darkMode)}
@@ -189,22 +175,14 @@ const Navbar = () => {
             </div>
           </button>
 
-          {/* Cart */}
-          <NavLink
-            to="/cart"
-            className={({ isActive }) =>
-              `flex-fill text-decoration-none ${isActive ? "text-primary" : "text-body"}`
-            }
-          >
+          <NavLink to="/cart" className={({ isActive }) => `flex-fill text-decoration-none ${isActive ? "text-primary" : "text-body"}`}>
             <div className="d-flex flex-column align-items-center py-1 position-relative">
               <i className="fa fa-shopping-cart fs-5"></i>
-
               {totalItems > 0 && (
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                   {totalItems}
                 </span>
               )}
-
               <small>Cart</small>
             </div>
           </NavLink>
@@ -215,19 +193,11 @@ const Navbar = () => {
         {mobileMoreOpen && (
           <div
             className="position-fixed bottom-0 start-0 w-100 h-75 bg-light shadow-lg"
-            style={{
-              zIndex: 2000,
-              overflowY: "auto",
-              borderTopLeftRadius: "12px",
-              borderTopRightRadius: "12px"
-            }}
+            style={{ zIndex: 2000, overflowY: "auto", borderTopLeftRadius: "12px", borderTopRightRadius: "12px" }}
           >
             <div className="d-flex justify-content-between align-items-center p-3 border-bottom">
               <h5 className="mb-0">More</h5>
-              <button
-                className="btn btn-sm btn-outline-secondary"
-                onClick={() => setMobileMoreOpen(false)}
-              >
+              <button className="btn btn-sm btn-outline-secondary" onClick={() => setMobileMoreOpen(false)}>
                 Close
               </button>
             </div>
@@ -238,9 +208,7 @@ const Navbar = () => {
                   key={to}
                   to={to}
                   className={({ isActive }) =>
-                    `nav-link d-flex justify-content-between py-2 ${
-                      isActive ? "text-primary fw-bold" : "text-body"
-                    }`
+                    `nav-link d-flex justify-content-between py-2 ${isActive ? "text-primary fw-bold" : "text-body"}`
                   }
                   onClick={() => setMobileMoreOpen(false)}
                 >
@@ -248,12 +216,7 @@ const Navbar = () => {
                     <i className={`fa ${icon} me-2`}></i>
                     {label}
                   </span>
-
-                  {count > 0 && (
-                    <span className="badge rounded-pill bg-danger">
-                      {count}
-                    </span>
-                  )}
+                  {count > 0 && <span className="badge rounded-pill bg-danger">{count}</span>}
                 </NavLink>
               ))}
             </div>
@@ -261,19 +224,41 @@ const Navbar = () => {
         )}
       </nav>
 
-      {/* COMPARE MODAL */}
+      {/* COMPARE MODAL (FIXED DARK MODE) */}
       {showCompareModal && (
-        <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex justify-content-center align-items-center" style={{ zIndex: 2000 }}>
-          <div className="bg-white p-4 rounded shadow" style={{ width: "90%", maxWidth: "500px" }}>
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+          style={{
+            zIndex: 2000,
+            backgroundColor: "rgba(0,0,0,0.6)",
+            backdropFilter: "blur(4px)"
+          }}
+        >
+          <div
+            className={`p-4 rounded shadow-lg ${
+              darkMode ? "bg-dark text-white" : "bg-white text-dark"
+            }`}
+            style={{ width: "90%", maxWidth: "500px" }}
+          >
             <h5 className="text-danger mb-3">Compare Products</h5>
-            <p>You have selected {compareList.length} products.</p>
 
-            <div className="d-flex justify-content-end gap-2">
-              <button className="btn btn-outline-secondary" onClick={() => setShowCompareModal(false)}>
+            <p>
+              You have selected <strong>{compareList.length}</strong> products.
+            </p>
+
+            <div className="d-flex justify-content-end gap-2 mt-3">
+              <button
+                className={`btn ${darkMode ? "btn-outline-light" : "btn-outline-secondary"}`}
+                onClick={() => setShowCompareModal(false)}
+              >
                 Close
               </button>
 
-              <Link to="/compare" className="btn btn-danger" onClick={() => setShowCompareModal(false)}>
+              <Link
+                to="/compare"
+                className="btn btn-danger"
+                onClick={() => setShowCompareModal(false)}
+              >
                 Go to Compare
               </Link>
             </div>
