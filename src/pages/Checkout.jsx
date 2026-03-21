@@ -14,6 +14,8 @@ const Checkout = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [finalTotal, setFinalTotal] = useState(0);
+  const [receiptItems, setReceiptItems] = useState([]);
+  const [receiptNumber, setReceiptNumber] = useState("");
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   const tax = subtotal * 0.12;
@@ -23,15 +25,30 @@ const Checkout = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const generateReceiptNumber = () => {
+    return "RCPT-" + Date.now();
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!form.name || !form.email || !form.address || !form.phone) {
       alert("Please fill in all fields");
       return;
     }
+
     setFinalTotal(total);
+    setReceiptItems(cart);
+    setReceiptNumber(generateReceiptNumber());
+
     clearCart();
     setSubmitted(true);
+  };
+
+  const handlePrint = () => {
+    setTimeout(() => {
+      window.print();
+    }, 300);
   };
 
   const formatPrice = (value) =>
@@ -39,10 +56,13 @@ const Checkout = () => {
 
   // ================= RECEIPT VIEW =================
   if (submitted) {
+    const receiptSubtotal = finalTotal / 1.12;
+    const receiptTax = finalTotal - receiptSubtotal;
+
     return (
       <div className="container my-5 d-flex justify-content-center">
         <div
-          className="bg-white p-4 shadow"
+          className="bg-white p-4 shadow receipt"
           style={{
             maxWidth: "400px",
             width: "100%",
@@ -55,6 +75,10 @@ const Checkout = () => {
             <small>Official Receipt</small>
             <br />
             <small>{new Date().toLocaleString()}</small>
+            <br />
+            <small>
+              <strong>Receipt No:</strong> {receiptNumber}
+            </small>
           </div>
 
           <hr style={{ borderTop: "1px dashed black" }} />
@@ -69,7 +93,7 @@ const Checkout = () => {
           <hr style={{ borderTop: "1px dashed black" }} />
 
           {/* ITEMS */}
-          {cart.map((item) => (
+          {receiptItems.map((item) => (
             <div key={item.id} className="mb-2">
               <div className="d-flex justify-content-between">
                 <span>{item.name}</span>
@@ -83,14 +107,14 @@ const Checkout = () => {
 
           <hr style={{ borderTop: "1px dashed black" }} />
 
-          {/* TOTAL */}
+          {/* TOTALS */}
           <div className="d-flex justify-content-between">
             <span>Subtotal</span>
-            <span>₱{formatPrice(finalTotal / 1.12)}</span>
+            <span>₱{formatPrice(receiptSubtotal)}</span>
           </div>
           <div className="d-flex justify-content-between">
             <span>VAT (12%)</span>
-            <span>₱{formatPrice(finalTotal - finalTotal / 1.12)}</span>
+            <span>₱{formatPrice(receiptTax)}</span>
           </div>
 
           <hr />
@@ -104,6 +128,13 @@ const Checkout = () => {
 
           <div className="text-center mt-3">
             <small>Thank you for your purchase!</small>
+          </div>
+
+          {/* PRINT BUTTON */}
+          <div className="text-center mt-3 no-print">
+            <button className="btn btn-dark btn-sm" onClick={handlePrint}>
+              Print Receipt
+            </button>
           </div>
         </div>
       </div>
@@ -120,10 +151,13 @@ const Checkout = () => {
         <div className="col-lg-6">
           <div className="card shadow-sm p-4">
             <h4 className="mb-4 fw-bold">Customer Information</h4>
+
             <form onSubmit={handleSubmit}>
               {["name", "email", "address", "phone"].map((field) => (
                 <div className="mb-3" key={field}>
-                  <label className="form-label text-capitalize">{field}</label>
+                  <label className="form-label text-capitalize">
+                    {field}
+                  </label>
                   <input
                     type={field === "email" ? "email" : "text"}
                     name={field}
@@ -161,8 +195,13 @@ const Checkout = () => {
             <h4 className="mb-4 fw-bold text-danger">Order Summary</h4>
 
             {cart.map((item) => (
-              <div key={item.id} className="d-flex justify-content-between mb-2">
-                <span>{item.name} x {item.qty}</span>
+              <div
+                key={item.id}
+                className="d-flex justify-content-between mb-2"
+              >
+                <span>
+                  {item.name} x {item.qty}
+                </span>
                 <span>₱{formatPrice(item.price * item.qty)}</span>
               </div>
             ))}
