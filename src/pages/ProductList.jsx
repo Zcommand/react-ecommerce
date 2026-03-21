@@ -15,6 +15,9 @@ const ProductList = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortOption, setSortOption] = useState("");
 
+  const [visibleCount, setVisibleCount] = useState(8);
+  const [isFetching, setIsFetching] = useState(false);
+
   const { recentlyViewed = [] } = useContext(CartContext);
 
   useEffect(() => {
@@ -61,6 +64,39 @@ const ProductList = () => {
       return 0;
     });
 
+  // ✅ Infinite scroll listener
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isFetching) return;
+
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 100
+      ) {
+        setIsFetching(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isFetching]);
+
+  // ✅ Load more products safely
+  useEffect(() => {
+    if (!isFetching) return;
+
+    // ✅ Stop if no more products
+    if (visibleCount >= processedProducts.length) {
+      setIsFetching(false);
+      return;
+    }
+
+    setTimeout(() => {
+      setVisibleCount((prev) => prev + 8);
+      setIsFetching(false);
+    }, 500);
+  }, [isFetching, processedProducts.length, visibleCount]);
+
   return (
     <div className="container mt-3">
       <div className="row">
@@ -70,6 +106,7 @@ const ProductList = () => {
             onCategorySelect={handleCategorySelect}
             categories={categories}
             products={products}
+            loading={loading}
           />
         </div>
 
@@ -98,46 +135,54 @@ const ProductList = () => {
             <option value="name">Name (A-Z)</option>
           </select>
 
-          {/* Products Grid */}
+          {/* Products */}
           <div className="row">
-            {loading
-              ? Array(8)
-                  .fill(0)
-                  .map((_, i) => (
-                    <div
-                      className="col-lg-3 col-md-4 col-sm-6 mb-4"
-                      key={i}
-                    >
-                      <div className="card p-3">
-                        <Skeleton height={180} />
-                        <div className="mt-2">
-                          <Skeleton height={20} />
-                          <Skeleton height={15} width="60%" />
-                        </div>
+            {loading ? (
+              Array(8)
+                .fill(0)
+                .map((_, i) => (
+                  <div className="col-lg-3 col-md-4 col-sm-6 mb-4" key={i}>
+                    <div className="card p-3">
+                      <Skeleton height={180} />
+                      <div className="mt-2">
+                        <Skeleton height={20} />
+                        <Skeleton height={15} width="60%" />
                       </div>
                     </div>
-                  ))
-              : processedProducts.length > 0 ? (
-                  processedProducts.map((product) => (
-                    <div
-                      className="col-lg-3 col-md-4 col-sm-6 mb-4"
-                      key={product.id}
-                    >
-                      <ProductCard product={product} />
-                    </div>
-                  ))
-                ) : (
-                  <h5 className="text-center">No products found.</h5>
-                )}
+                  </div>
+                ))
+            ) : processedProducts.length > 0 ? (
+              processedProducts
+                .slice(0, visibleCount)
+                .map((product) => (
+                  <div
+                    className="col-lg-3 col-md-4 col-sm-6 mb-4"
+                    key={product.id}
+                  >
+                    <ProductCard product={product} />
+                  </div>
+                ))
+            ) : (
+              <h5 className="text-center">No products found.</h5>
+            )}
           </div>
 
-          {/* Recently Viewed Products */}
+          {/* Spinner (only if more products exist) */}
+          {isFetching &&
+            visibleCount < processedProducts.length && (
+              <div className="text-center my-3">
+                <div className="spinner-border text-danger" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            )}
+
+          {/* Recently Viewed */}
           {recentlyViewed.length > 0 && (
             <div className="mt-5 position-relative">
               <h4 className="mb-3 text-danger">Recently Viewed</h4>
 
               <div
-                id="recentlyViewedContainer"
                 className="d-flex overflow-auto pb-2"
                 style={{ gap: "1rem", scrollBehavior: "smooth" }}
               >
