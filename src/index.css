@@ -1,38 +1,25 @@
-:root {
+/* Base */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+  color: #000;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Links */
 a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #f8f9fa;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
+/* Buttons */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -44,28 +31,23 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Headings */
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
 }
 
-/* Product image zoom on hover */
+/* Product image zoom */
 .product-img-wrapper {
   overflow: hidden;
   position: relative;
@@ -78,12 +60,11 @@ button:focus-visible {
   transition: transform 0.4s ease;
 }
 
-/* zoom effect like Shopee/Lazada */
 .product-img-wrapper:hover .product-img {
   transform: scale(1.1);
 }
 
-/* sale badge */
+/* Sale badge */
 .sale-badge {
   position: absolute;
   top: 10px;
@@ -96,14 +77,14 @@ button:focus-visible {
   border-radius: 4px;
 }
 
-/* Apply only on mobile and tablets (below lg breakpoint) */
+/* Mobile spacing for fixed navbar */
 @media (max-width: 991.98px) {
   body {
     padding-bottom: 70px;
   }
 }
 
-/* Default (Desktop) */
+/* Store text */
 .store-title {
   font-size: 2.5em;
   font-weight: bold;
@@ -113,17 +94,19 @@ button:focus-visible {
   font-size: 1.2rem;
 }
 
-/* Mobile View */
+/* Mobile typography */
 @media (max-width: 991.98px) {
   .store-title {
     font-size: 1.5rem;
   }
+
   .store-subtitle {
     font-size: 0.9rem;
   }
 }
 
-.fade-in{
+/* Animations */
+.fade-in {
   animation: fadeIn 0.6s ease forwards;
 }
 
@@ -138,12 +121,12 @@ button:focus-visible {
   }
 }
 
-/* Background gradient */
+/* Hero gradient */
 .header-hero {
   background: linear-gradient(135deg, #8B0000, #B22222, #FF0000);
 }
 
-/* Floating glow effect */
+/* Glow effects */
 .glow {
   position: absolute;
   border-radius: 50%;
@@ -169,10 +152,13 @@ button:focus-visible {
   animation-delay: 2s;
 }
 
-/* Floating animation */
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 /* Title animation */
@@ -191,8 +177,184 @@ button:focus-visible {
   }
 }
 
-/* Button hover */
+/* Hover effect */
 .btn-hover:hover {
   transform: scale(1.05);
   transition: 0.2s ease;
+}
+
+/* ===================== */
+/* DARK MODE */
+/* ===================== */
+
+body.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/* Cards */
+body.dark-mode .card {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+/* ===================== */
+/* NAVBARS */
+/* ===================== */
+
+/* Desktop navbar */
+body.dark-mode .navbar {
+  background-color: #1e1e1e !important;
+}
+
+/* Mobile fixed bottom navbar */
+body.dark-mode .navbar.fixed-bottom {
+  background-color: #1e1e1e !important;
+  border-top: 1px solid #333 !important;
+}
+
+/* ✅ Fix mobile icon + text visibility */
+body.dark-mode .navbar.fixed-bottom i,
+body.dark-mode .navbar.fixed-bottom small {
+  color: #ffffff !important;
+}
+
+/* Mobile buttons (More / Theme) */
+body.dark-mode .navbar.fixed-bottom button {
+  color: #ffffff !important;
+}
+
+/* ===================== */
+/* MOBILE DRAWER ("More") */
+/* ===================== */
+
+body.dark-mode .position-fixed.bg-light {
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
+}
+
+/* Drawer links */
+body.dark-mode .position-fixed .nav-link {
+  color: #ffffff !important;
+}
+
+/* Borders inside drawer */
+body.dark-mode .border-bottom {
+  border-color: #333 !important;
+}
+
+/* ===================== */
+/* DROPDOWN MENU (DESKTOP) */
+/* ===================== */
+
+body.dark-mode .dropdown-menu {
+  background-color: #2a2a2a;
+}
+
+body.dark-mode .dropdown-item {
+  color: #ffffff !important;
+}
+
+/* ===================== */
+/* GLOBAL NAV LINK FIX */
+/* ===================== */
+
+body.dark-mode .nav-link {
+  color: #ffffff !important;
+}
+
+/* Tables */
+body.dark-mode .table {
+  color: #ffffff;
+}
+
+/* Buttons */
+body.dark-mode button {
+  color: #ffffff;
+}
+
+/* ===================== */
+/* SIDEBAR */
+/* ===================== */
+
+body.dark-mode .sidebar,
+body.dark-mode .offcanvas,
+body.dark-mode .bg-light {
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
+}
+
+/* Sidebar links */
+body.dark-mode .sidebar .nav-link,
+body.dark-mode .offcanvas .nav-link {
+  color: #ffffff !important;
+}
+
+/* Hover effect */
+body.dark-mode .sidebar .nav-link:hover,
+body.dark-mode .offcanvas .nav-link:hover {
+  background-color: #333;
+}
+
+/* ===================== */
+/* SIDEBAR (FIXED) */
+/* ===================== */
+
+body.dark-mode .list-group {
+  background-color: #1e1e1e !important;
+  border: none;
+}
+
+body.dark-mode .list-group-item {
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
+  border-color: #333 !important;
+}
+
+/* Hover effect */
+body.dark-mode .list-group-item:hover {
+  background-color: #2a2a2a !important;
+}
+
+/* Active category (your red highlight) */
+body.dark-mode .list-group-item-danger {
+  background-color: #dc3545 !important;
+  color: #ffffff !important;
+}
+
+/* Sidebar category text */
+body.dark-mode .list-group-item .fw-bold {
+  color: #ffffff !important;
+}
+
+/* Badge */
+body.dark-mode .badge.text-bg-danger {
+  background-color: #dc3545 !important;
+  color: #ffffff !important;
+}
+
+/* ===================== */
+/* SORT DROPDOWN */
+/* ===================== */
+
+body.dark-mode select,
+body.dark-mode .form-select {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+  border: 1px solid #444 !important;
+}
+
+/* Dropdown options */
+body.dark-mode option {
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+/* ===================== */
+/* GENERAL CARD / CONTAINER FIX (optional consistency) */
+/* ===================== */
+
+body.dark-mode .container,
+body.dark-mode .container-fluid {
+  color: #ffffff;
 }

@@ -8,12 +8,11 @@ const Navbar = () => {
   const totalItems = cart.reduce((sum, item) => sum + (item.qty || 0), 0);
   const location = useLocation();
 
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
-
-  // ✅ Compare modal state
   const [showCompareModal, setShowCompareModal] = useState(false);
+
+  const [darkMode, setDarkMode] = useState(false);
 
   const desktopDropdownRef = useRef(null);
 
@@ -31,13 +30,15 @@ const Navbar = () => {
     { to: "/compare", label: "Compare", icon: "fa-exchange-alt", count: compareList.length },
   ];
 
+  // Apply dark mode
+  useEffect(() => {
+    document.body.classList.toggle("dark-mode", darkMode);
+  }, [darkMode]);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        desktopDropdownRef.current &&
-        !desktopDropdownRef.current.contains(event.target)
-      ) {
+      if (desktopDropdownRef.current && !desktopDropdownRef.current.contains(event.target)) {
         setMoreOpen(false);
       }
     };
@@ -45,21 +46,18 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ✅ Show modal when 2 or more compare items
+  // Compare modal trigger
   useEffect(() => {
-    if (compareList.length >= 2) {
-      setShowCompareModal(true);
-    }
+    if (compareList.length >= 2) setShowCompareModal(true);
   }, [compareList]);
 
-  // ✅ NEW: Close modal automatically when route changes
   useEffect(() => {
     setShowCompareModal(false);
   }, [location.pathname]);
 
   return (
     <>
-      {/* DESKTOP */}
+      {/* DESKTOP NAVBAR */}
       <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-lg d-none d-lg-block">
         <div className="container">
           <NavLink className="navbar-brand d-flex align-items-center" to="/">
@@ -68,6 +66,7 @@ const Navbar = () => {
 
           <div className="collapse navbar-collapse show">
             <ul className="navbar-nav ms-auto align-items-center">
+
               {mainLinks.map(({ to, label, icon, end }) => (
                 <li className="nav-item mx-1" key={to}>
                   <NavLink
@@ -83,14 +82,12 @@ const Navbar = () => {
                 </li>
               ))}
 
+              {/* MORE */}
               <li className="nav-item dropdown mx-1" ref={desktopDropdownRef}>
-                <span
-                  className="nav-link dropdown-toggle"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setMoreOpen(!moreOpen)}
-                >
+                <span className="nav-link dropdown-toggle" onClick={() => setMoreOpen(!moreOpen)}>
                   More
                 </span>
+
                 <ul className={`dropdown-menu ${moreOpen ? "show" : ""}`}>
                   {secondaryLinks.map(({ to, label, icon }) => (
                     <li key={to}>
@@ -107,6 +104,17 @@ const Navbar = () => {
                 </ul>
               </li>
 
+              {/* DARK MODE TOGGLE */}
+              <li className="nav-item ms-3">
+                <button
+                  className="btn btn-outline-secondary btn-sm"
+                  onClick={() => setDarkMode(!darkMode)}
+                >
+                  <i className={`fa ${darkMode ? "fa-sun" : "fa-moon"}`}></i>
+                </button>
+              </li>
+
+              {/* ICONS */}
               {[
                 { to: "/wishlist", icon: "fa-heart", count: wishlist.length },
                 { to: "/compare", icon: "fa-exchange-alt", count: compareList.length },
@@ -116,44 +124,52 @@ const Navbar = () => {
                   <NavLink to={to} className="nav-link position-relative">
                     <i className={`fa ${icon}`}></i>
                     {count > 0 && (
-                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                        style={{ fontSize: "0.7rem" }}>
+                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {count}
                       </span>
                     )}
                   </NavLink>
                 </li>
               ))}
+
             </ul>
           </div>
         </div>
       </nav>
 
-      {/* MOBILE (unchanged UI parts omitted for brevity) */}
-      <nav className="navbar fixed-bottom bg-light border-top shadow-lg d-lg-none">
+      {/* MOBILE NAVBAR */}
+      <nav className="navbar fixed-bottom bg-light border-top shadow-lg d-lg-none" style={{ zIndex: 1030 }}>
         <div className="d-flex justify-content-around align-items-center w-100 text-center">
 
-          <NavLink to="/" className={({ isActive }) =>
-            `flex-fill text-decoration-none ${isActive ? "text-primary" : "text-dark"}`
-          }>
+          {/* Home */}
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `flex-fill text-decoration-none ${isActive ? "text-primary" : "text-body"}`
+            }
+          >
             <div className="d-flex flex-column align-items-center py-1">
               <i className="fa fa-home fs-5"></i>
               <small>Home</small>
             </div>
           </NavLink>
 
-          <NavLink to="/products" className={({ isActive }) =>
-            `flex-fill text-decoration-none ${isActive ? "text-primary" : "text-dark"}`
-          }>
+          {/* Products */}
+          <NavLink
+            to="/products"
+            className={({ isActive }) =>
+              `flex-fill text-decoration-none ${isActive ? "text-primary" : "text-body"}`
+            }
+          >
             <div className="d-flex flex-column align-items-center py-1">
               <i className="fa fa-box fs-5"></i>
               <small>Products</small>
             </div>
           </NavLink>
 
+          {/* More */}
           <button
-            className="flex-fill btn text-dark p-0"
-            style={{ background: "none", border: "none" }}
+            className="flex-fill btn p-0 border-0 bg-transparent text-body"
             onClick={() => setMobileMoreOpen(true)}
           >
             <div className="d-flex flex-column align-items-center py-1">
@@ -162,15 +178,29 @@ const Navbar = () => {
             </div>
           </button>
 
-          <NavLink to="/cart" className={({ isActive }) =>
-            `flex-fill text-decoration-none ${isActive ? "text-primary" : "text-dark"}`
-          }>
+          {/* Theme */}
+          <button
+            className="flex-fill btn p-0 border-0 bg-transparent text-body"
+            onClick={() => setDarkMode(!darkMode)}
+          >
+            <div className="d-flex flex-column align-items-center py-1">
+              <i className={`fa ${darkMode ? "fa-sun" : "fa-moon"} fs-5`}></i>
+              <small>Theme</small>
+            </div>
+          </button>
+
+          {/* Cart */}
+          <NavLink
+            to="/cart"
+            className={({ isActive }) =>
+              `flex-fill text-decoration-none ${isActive ? "text-primary" : "text-body"}`
+            }
+          >
             <div className="d-flex flex-column align-items-center py-1 position-relative">
               <i className="fa fa-shopping-cart fs-5"></i>
 
               {totalItems > 0 && (
-                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                  style={{ fontSize: "0.65rem" }}>
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                   {totalItems}
                 </span>
               )}
@@ -181,15 +211,23 @@ const Navbar = () => {
 
         </div>
 
-        {/* Mobile More Drawer stays same */}
+        {/* MOBILE DRAWER */}
         {mobileMoreOpen && (
-          <div className="position-fixed bottom-0 start-0 w-100 h-75 bg-light shadow-lg"
-            style={{ zIndex: 1050, overflowY: "auto", borderTopLeftRadius: "12px", borderTopRightRadius: "12px" }}>
-
+          <div
+            className="position-fixed bottom-0 start-0 w-100 h-75 bg-light shadow-lg"
+            style={{
+              zIndex: 2000,
+              overflowY: "auto",
+              borderTopLeftRadius: "12px",
+              borderTopRightRadius: "12px"
+            }}
+          >
             <div className="d-flex justify-content-between align-items-center p-3 border-bottom">
               <h5 className="mb-0">More</h5>
-              <button className="btn btn-sm btn-outline-secondary"
-                onClick={() => setMobileMoreOpen(false)}>
+              <button
+                className="btn btn-sm btn-outline-secondary"
+                onClick={() => setMobileMoreOpen(false)}
+              >
                 Close
               </button>
             </div>
@@ -200,18 +238,19 @@ const Navbar = () => {
                   key={to}
                   to={to}
                   className={({ isActive }) =>
-                    `nav-link d-flex align-items-center justify-content-between py-2 ${
-                      isActive ? "text-primary fw-bold" : "text-dark"
+                    `nav-link d-flex justify-content-between py-2 ${
+                      isActive ? "text-primary fw-bold" : "text-body"
                     }`
                   }
                   onClick={() => setMobileMoreOpen(false)}
                 >
-                  <span className="d-flex align-items-center">
+                  <span>
                     <i className={`fa ${icon} me-2`}></i>
                     {label}
                   </span>
+
                   {count > 0 && (
-                    <span className="badge rounded-pill bg-danger" style={{ fontSize: "0.7rem" }}>
+                    <span className="badge rounded-pill bg-danger">
                       {count}
                     </span>
                   )}
@@ -222,31 +261,19 @@ const Navbar = () => {
         )}
       </nav>
 
-      {/* ✅ COMPARE MODAL */}
+      {/* COMPARE MODAL */}
       {showCompareModal && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex justify-content-center align-items-center"
-          style={{ zIndex: 2000 }}
-        >
+        <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex justify-content-center align-items-center" style={{ zIndex: 2000 }}>
           <div className="bg-white p-4 rounded shadow" style={{ width: "90%", maxWidth: "500px" }}>
             <h5 className="text-danger mb-3">Compare Products</h5>
-
             <p>You have selected {compareList.length} products.</p>
 
             <div className="d-flex justify-content-end gap-2">
-              <button
-                className="btn btn-outline-secondary"
-                onClick={() => setShowCompareModal(false)}
-              >
+              <button className="btn btn-outline-secondary" onClick={() => setShowCompareModal(false)}>
                 Close
               </button>
 
-              {/* ✅ FIX: close modal on click */}
-              <Link
-                to="/compare"
-                className="btn btn-danger"
-                onClick={() => setShowCompareModal(false)}
-              >
+              <Link to="/compare" className="btn btn-danger" onClick={() => setShowCompareModal(false)}>
                 Go to Compare
               </Link>
             </div>

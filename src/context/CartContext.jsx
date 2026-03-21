@@ -1,13 +1,19 @@
-// src/context/CartContext.jsx
 import { createContext, useState } from "react";
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);          // {id, name, qty, price, ...}
-  const [wishlist, setWishlist] = useState([]);  // {id, name, price, ...}
+  const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
   const [compareList, setCompareList] = useState([]);
-  const [recentlyViewed, setRecentlyViewed] = useState([]); // NEW
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
+
+  // ✅ NEW: Theme state
+  const [theme, setTheme] = useState("light");
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
 
   // Cart actions
   const addToCart = (product) => {
@@ -70,9 +76,9 @@ export const CartProvider = ({ children }) => {
   // Recently Viewed
   const addToRecentlyViewed = (product) => {
     setRecentlyViewed((prev) => {
-      const filtered = prev.filter((p) => p.id !== product.id); // remove duplicates
+      const filtered = prev.filter((p) => p.id !== product.id);
       const updated = [product, ...filtered];
-      return updated.slice(0, 5); // keep max 5
+      return updated.slice(0, 5);
     });
   };
 
@@ -82,7 +88,12 @@ export const CartProvider = ({ children }) => {
         cart,
         wishlist,
         compareList,
-        recentlyViewed, // expose
+        recentlyViewed,
+
+        // ✅ theme values
+        theme,
+        toggleTheme,
+
         addToCart,
         removeFromCart,
         increaseQty,
@@ -92,7 +103,7 @@ export const CartProvider = ({ children }) => {
         removeFromWishlist,
         addToCompare,
         removeFromCompare,
-        addToRecentlyViewed, // expose
+        addToRecentlyViewed,
       }}
     >
       {children}

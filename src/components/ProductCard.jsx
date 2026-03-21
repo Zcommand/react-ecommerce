@@ -11,7 +11,7 @@ const ProductCard = ({ product }) => {
     addToCompare,
     removeFromCompare,
     compareList,
-    addToRecentlyViewed, // NEW
+    addToRecentlyViewed,
   } = useContext(CartContext);
 
   const inWishlist = wishlist.some((item) => item.id === product.id);
@@ -44,6 +44,7 @@ const ProductCard = ({ product }) => {
         alt={product.name}
         style={{ objectFit: "contain", height: "180px" }}
       />
+
       <div className="card-body d-flex flex-column">
         <h5
           className="card-title text-truncate"
@@ -52,7 +53,16 @@ const ProductCard = ({ product }) => {
         >
           {product.name}
         </h5>
-        <p className="card-text text-danger fw-bold mb-3">₱{product.price}</p>
+
+        {/* Star Rating */}
+        <div className="mb-2 text-warning">
+          {"★".repeat(product.rating)}
+          {"☆".repeat(5 - product.rating)}
+        </div>
+
+        <p className="card-text text-danger fw-bold mb-3">
+          ₱{product.price}
+        </p>
 
         <div className="d-flex gap-2 mt-auto flex-wrap">
           {/* Add to Cart */}
