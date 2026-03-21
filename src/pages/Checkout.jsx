@@ -1,8 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 
 const Checkout = () => {
   const { cart, clearCart } = useContext(CartContext);
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     name: "",
@@ -14,8 +16,9 @@ const Checkout = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [finalTotal, setFinalTotal] = useState(0);
+
+  // ✅ store snapshot of cart for receipt
   const [receiptItems, setReceiptItems] = useState([]);
-  const [receiptNumber, setReceiptNumber] = useState("");
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   const tax = subtotal * 0.12;
@@ -23,10 +26,6 @@ const Checkout = () => {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const generateReceiptNumber = () => {
-    return "RCPT-" + Date.now();
   };
 
   const handleSubmit = (e) => {
@@ -37,32 +36,38 @@ const Checkout = () => {
       return;
     }
 
+    const currentCart = [...cart];
+
+    setReceiptItems(currentCart);
     setFinalTotal(total);
-    setReceiptItems(cart);
-    setReceiptNumber(generateReceiptNumber());
 
     clearCart();
     setSubmitted(true);
   };
 
-  const handlePrint = () => {
-    setTimeout(() => {
-      window.print();
-    }, 300);
+  // ✅ BUY MORE handler (redirect to products)
+  const handleBuyMore = () => {
+    navigate("/products");
   };
 
   const formatPrice = (value) =>
     value.toLocaleString("en-PH", { minimumFractionDigits: 2 });
 
+  // ✅ Auto print AFTER receipt renders fully
+  useEffect(() => {
+    if (submitted) {
+      setTimeout(() => {
+        window.print();
+      }, 300);
+    }
+  }, [submitted]);
+
   // ================= RECEIPT VIEW =================
   if (submitted) {
-    const receiptSubtotal = finalTotal / 1.12;
-    const receiptTax = finalTotal - receiptSubtotal;
-
     return (
-      <div className="container my-5 d-flex justify-content-center">
+      <div className="container my-5 d-flex justify-content-center receipt">
         <div
-          className="bg-white p-4 shadow receipt"
+          className="bg-white p-4 shadow"
           style={{
             maxWidth: "400px",
             width: "100%",
@@ -75,10 +80,6 @@ const Checkout = () => {
             <small>Official Receipt</small>
             <br />
             <small>{new Date().toLocaleString()}</small>
-            <br />
-            <small>
-              <strong>Receipt No:</strong> {receiptNumber}
-            </small>
           </div>
 
           <hr style={{ borderTop: "1px dashed black" }} />
@@ -107,14 +108,14 @@ const Checkout = () => {
 
           <hr style={{ borderTop: "1px dashed black" }} />
 
-          {/* TOTALS */}
+          {/* TOTAL */}
           <div className="d-flex justify-content-between">
             <span>Subtotal</span>
-            <span>₱{formatPrice(receiptSubtotal)}</span>
+            <span>₱{formatPrice(finalTotal / 1.12)}</span>
           </div>
           <div className="d-flex justify-content-between">
             <span>VAT (12%)</span>
-            <span>₱{formatPrice(receiptTax)}</span>
+            <span>₱{formatPrice(finalTotal - finalTotal / 1.12)}</span>
           </div>
 
           <hr />
@@ -132,8 +133,21 @@ const Checkout = () => {
 
           {/* PRINT BUTTON */}
           <div className="text-center mt-3 no-print">
-            <button className="btn btn-dark btn-sm" onClick={handlePrint}>
+            <button
+              className="btn btn-dark btn-sm"
+              onClick={() => window.print()}
+            >
               Print Receipt
+            </button>
+          </div>
+
+          {/* BUY MORE BUTTON */}
+          <div className="text-center mt-2 no-print">
+            <button
+              className="btn btn-outline-danger btn-sm"
+              onClick={handleBuyMore}
+            >
+              Buy More
             </button>
           </div>
         </div>
@@ -151,13 +165,10 @@ const Checkout = () => {
         <div className="col-lg-6">
           <div className="card shadow-sm p-4">
             <h4 className="mb-4 fw-bold">Customer Information</h4>
-
             <form onSubmit={handleSubmit}>
               {["name", "email", "address", "phone"].map((field) => (
                 <div className="mb-3" key={field}>
-                  <label className="form-label text-capitalize">
-                    {field}
-                  </label>
+                  <label className="form-label text-capitalize">{field}</label>
                   <input
                     type={field === "email" ? "email" : "text"}
                     name={field}
@@ -195,13 +206,8 @@ const Checkout = () => {
             <h4 className="mb-4 fw-bold text-danger">Order Summary</h4>
 
             {cart.map((item) => (
-              <div
-                key={item.id}
-                className="d-flex justify-content-between mb-2"
-              >
-                <span>
-                  {item.name} x {item.qty}
-                </span>
+              <div key={item.id} className="d-flex justify-content-between mb-2">
+                <span>{item.name} x {item.qty}</span>
                 <span>₱{formatPrice(item.price * item.qty)}</span>
               </div>
             ))}
